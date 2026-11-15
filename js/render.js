@@ -41,34 +41,38 @@ export function renderCard(item, { track, conflicts }) {
   const timeRange = `${escapeHtml(item.start_time || "--:--")} - ${escapeHtml(item.end_time || "--:--")}`;
 
   return `
-    <div class="rounded-xl border-r-4 p-2.5 shadow-sm transition hover:shadow-md ${style.card} ${hasConflict ? "ring-2 ring-red-500 bg-red-50/60" : "border border-slate-200/80"}">
-      <div class="flex items-center justify-between gap-1 mb-1.5">
-        <span class="text-[11px] font-extrabold bg-white/90 px-2 py-0.5 rounded border border-slate-200 text-slate-800" dir="ltr">
+    <div class="min-w-0 rounded-xl border-r-4 p-2.5 shadow-sm transition hover:shadow-md ${style.card} ${hasConflict ? "ring-2 ring-red-500 bg-red-50/60" : "border border-slate-200/80"}">
+      <div class="flex flex-wrap items-center justify-between gap-1.5 mb-1.5">
+        <span class="text-[11px] font-extrabold bg-white/90 px-2 py-0.5 rounded border border-slate-200 text-slate-800 shrink-0" dir="ltr">
           ${timeRange}
         </span>
-        <div class="flex items-center gap-1">
+        <div class="flex flex-wrap items-center gap-1">
           ${trackBadge}
-          <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${style.badge}">
+          <span class="text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${style.badge}">
             ${escapeHtml(style.label)}
           </span>
         </div>
       </div>
 
-      <h3 class="font-extrabold text-sm text-slate-900 mb-2 leading-snug">
+      <h3 class="font-extrabold text-sm text-slate-900 mb-2 leading-snug break-words" dir="auto">
         ${escapeHtml(item.group_name)}
       </h3>
 
-      <div class="flex items-center justify-between text-xs font-bold text-slate-700 pt-1.5 border-t border-black/5 gap-1">
-        <span class="flex items-center gap-1 truncate" title="${escapeHtml(item.teacher)}">
-          <span>👤</span> ${teacherDisplay}
-        </span>
-        <span class="flex items-center gap-1 ${roomIsMasjid ? "bg-emerald-700 text-white" : "bg-white/80 text-slate-800"} px-2 py-0.5 rounded border border-black/10 shrink-0">
-          <span>${roomIsMasjid ? "🕌" : "📍"}</span> ${roomDisplay}
-        </span>
+      <div class="flex flex-col gap-1.5 text-xs font-bold text-slate-700 pt-2 border-t border-black/5 min-w-0">
+        <div class="flex items-start gap-1.5 min-w-0 leading-snug" title="${escapeHtml(item.teacher)}">
+          <span class="shrink-0">👤</span>
+          <span class="min-w-0 break-words" dir="auto">${teacherDisplay}</span>
+        </div>
+        <div class="flex items-center justify-start min-w-0">
+          <span class="inline-flex items-center gap-1 max-w-full ${roomIsMasjid ? "bg-emerald-700 text-white" : "bg-white/85 text-slate-800"} px-2 py-0.5 rounded border border-black/10">
+            <span class="shrink-0">${roomIsMasjid ? "🕌" : "📍"}</span>
+            <span class="truncate" dir="auto">${roomDisplay}</span>
+          </span>
+        </div>
       </div>
 
       ${hasConflict ? `
-        <div class="mt-2 pt-1.5 border-t border-red-200 text-[11px] font-bold text-red-700 space-y-0.5">
+        <div class="mt-2 pt-1.5 border-t border-red-200 text-[11px] font-bold text-red-700 space-y-0.5 break-words">
           ${itemConflicts.map((c) => `<div>⚠️ ${escapeHtml(c)}</div>`).join("")}
         </div>
       ` : ""}
@@ -118,7 +122,26 @@ function renderTimeCluster(dayObj, cluster, state) {
 export function renderWeeklyGrid(data, state) {
   state.slotGroups.clear();
 
+  const dayCounts = DAYS_ORDER.map((dayObj) => ({
+    ...dayObj,
+    count: data.filter((d) => d.day === dayObj.key).length
+  }));
+
   return `
+    <!-- Quick Day Jump Bar (Mobile / Tablet) -->
+    <nav aria-label="الانتقال السريع للأيام" class="xl:hidden mb-3 -mx-1 px-1 flex items-center gap-1.5 overflow-x-auto pb-1">
+      ${dayCounts.map((d) => `
+        <button
+          type="button"
+          data-jump-day="${escapeHtml(d.key)}"
+          class="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border transition ${d.count ? "bg-white border-slate-300 text-slate-800 hover:border-emerald-500" : "bg-slate-100 border-slate-200 text-slate-400"}"
+        >
+          <span>${escapeHtml(d.label)}</span>
+          <span class="px-1.5 py-0.5 rounded-full text-[10px] ${d.count ? "bg-emerald-100 text-emerald-800" : "bg-slate-200 text-slate-500"}">${d.count}</span>
+        </button>
+      `).join("")}
+    </nav>
+
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-3">
       ${DAYS_ORDER.map((dayObj) => {
         const dayClasses = data.filter((d) => d.day === dayObj.key);
@@ -136,7 +159,7 @@ export function renderWeeklyGrid(data, state) {
         });
 
         return `
-          <div class="bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col overflow-hidden min-h-[320px]">
+          <div id="day-${escapeHtml(dayObj.key)}" class="min-w-0 scroll-mt-4 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col overflow-hidden min-h-[120px] xl:min-h-[320px]">
             <div class="bg-slate-800 text-white px-3.5 py-2.5 flex items-center justify-between">
               <span class="font-extrabold text-sm">${escapeHtml(dayObj.label)}</span>
               <span class="text-xs ${dayClasses.length ? "bg-emerald-600 text-white" : "bg-slate-700 text-slate-400"} px-2 py-0.5 rounded-full font-bold">
@@ -144,9 +167,9 @@ export function renderWeeklyGrid(data, state) {
               </span>
             </div>
 
-            <div class="p-2.5 space-y-2.5 flex-1 bg-slate-50/40 flex flex-col">
+            <div class="p-2.5 space-y-2.5 flex-1 bg-slate-50/40 flex flex-col min-w-0">
               ${timeClusters.length === 0
-                ? `<div class="m-auto text-center py-10 text-xs text-slate-400 font-medium">
+                ? `<div class="m-auto text-center py-6 xl:py-10 text-xs text-slate-400 font-medium">
                      لا توجد حلقات مجدولة
                    </div>`
                 : timeClusters.map((cluster) => renderTimeCluster(dayObj, cluster, state)).join("")
@@ -217,17 +240,17 @@ export function renderRoomsMatrix(data, state, selectedDay) {
 export function renderConflictsInspector(state) {
   return `
     <div class="bg-white rounded-2xl border border-red-200 shadow-sm overflow-hidden">
-      <div class="bg-red-600 text-white px-5 py-3 flex items-center justify-between">
+      <div class="bg-red-600 text-white px-4 sm:px-5 py-3 flex flex-wrap items-center justify-between gap-2">
         <div>
-          <h2 class="font-extrabold text-base">⚠️ مركز فحص التعارضات (${state.conflictPairs.length})</h2>
+          <h2 class="font-extrabold text-sm sm:text-base">⚠️ مركز فحص التعارضات (${state.conflictPairs.length})</h2>
           <p class="text-xs text-red-100">يفحص هذا القسم التداخلات الزمنية في القاعات (باستثناء المسجد) أو المعلمين</p>
         </div>
-        <button type="button" data-action="back-weekly" class="bg-white text-red-700 px-3 py-1 rounded-lg text-xs font-extrabold">
+        <button type="button" data-action="back-weekly" class="bg-white text-red-700 px-3 py-1.5 rounded-lg text-xs font-extrabold shrink-0">
           العودة للجدول
         </button>
       </div>
 
-      <div class="p-4 space-y-3">
+      <div class="p-3 sm:p-4 space-y-3">
         ${state.conflictPairs.length === 0
           ? `<div class="p-8 text-center text-emerald-700 font-bold">لا توجد أي تعارضات في الجدول حالياً!</div>`
           : state.conflictPairs.map((pair) => {

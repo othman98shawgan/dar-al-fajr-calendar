@@ -49,3 +49,4 @@ When preparing a Pull Request reminder, always format the PR Description inside 
 ## Tasks
 <!-- Add upcoming tasks here as `- [ ] <type>: <description>` -->
 - [x] fix: fix misplaced await syntax error, add normalizeTimeString, harden parsing, and modularize JS for static hosting
+- [x] fix: stack card teacher and location rows and optimize mobile responsive layout
