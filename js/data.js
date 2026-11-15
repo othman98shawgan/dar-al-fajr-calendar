@@ -79,7 +79,105 @@ export function normalizeTrack(trackVal) {
 }
 
 /**
- * Fetches a Google Sheet tab via Google Visualization API JSONP (CORS-free on static hosts).
+ * Parses RFC-4180 CSV text into an array of row objects keyed by both
+ * normalized header labels and column index fallbacks (_0, _1, ...).
+ */
+export function parseCSV(csvText) {
+  const text = String(csvText ?? "").replace(/^\uFEFF/, "");
+  const matrix = [];
+  let row = [];
+  let field = "";
+  let inQuotes = false;
+
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+
+    if (inQuotes) {
+      if (ch === '"') {
+        if (text[i + 1] === '"') {
+          field += '"';
+          i++;
+        } else {
+          inQuotes = false;
+        }
+      } else {
+        field += ch;
+      }
+      continue;
+    }
+
+    if (ch === '"') {
+      inQuotes = true;
+    } else if (ch === ",") {
+      row.push(field);
+      field = "";
+    } else if (ch === "\r" || ch === "\n") {
+      if (ch === "\r" && text[i + 1] === "\n") i++;
+      row.push(field);
+      if (row.some((cell) => cell.trim() !== "")) matrix.push(row);
+      row = [];
+      field = "";
+    } else {
+      field += ch;
+    }
+  }
+
+  if (field !== "" || row.length > 0) {
+    row.push(field);
+    if (row.some((cell) => cell.trim() !== "")) matrix.push(row);
+  }
+
+  if (matrix.length === 0) return [];
+
+  const cols = matrix[0].map((h) => String(h || "").trim().toLowerCase().replace(/\s+/g, "_"));
+
+  return matrix.slice(1).map((cells) => {
+    const rowObj = {};
+    cells.forEach((rawCell, i) => {
+      const val = String(rawCell ?? "").trim();
+      rowObj[`_${i}`] = val;
+      const headerKey = cols[i];
+      if (headerKey) rowObj[headerKey] = val;
+    });
+    return rowObj;
+  });
+}
+
+/**
+ * Fetches a Google Sheet tab as CSV (preserves mixed text + numeric columns such as group_name).
+ */
+export async function fetchSheetCSV(sheetId, gid, timeoutMs = 15000) {
+  const controller = new AbortController();
+  const timer = window.setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${encodeURIComponent(sheetId)}/export?format=csv&gid=${encodeURIComponent(gid)}&t=${Date.now()}`;
+    const response = await fetch(url, { cache: "no-store", signal: controller.signal });
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status} loading Google Sheet CSV`);
+    }
+    const csvText = await response.text();
+    return parseCSV(csvText);
+  } finally {
+    window.clearTimeout(timer);
+  }
+}
+
+/**
+ * Fetches a Google Sheet tab via CSV first (so mixed numeric/text columns aren't dropped by gviz),
+ * falling back to Google Visualization JSONP if CSV fetch fails.
+ */
+export async function fetchSheetRows(sheetId, gid, timeoutMs = 15000) {
+  try {
+    return await fetchSheetCSV(sheetId, gid, timeoutMs);
+  } catch (csvErr) {
+    console.warn("CSV fetch failed, falling back to JSONP:", csvErr);
+    return fetchSheetJSONP(sheetId, gid, timeoutMs);
+  }
+}
+
+/**
+ * Fetches a Google Sheet tab via Google Visualization API JSONP (CORS-free fallback).
  */
 export function fetchSheetJSONP(sheetId, gid, timeoutMs = 15000) {
   return new Promise((resolve, reject) => {
@@ -193,13 +291,14 @@ export function parseScheduleRows(scheduleRows) {
   return scheduleRows
     .filter((row) => {
       const name = getCell(row, 4, "group_name", "group", "name");
-      const active = getCell(row, 9, "active", "is_active").toUpperCase();
+      const active = getCell(row, 10, "active", "is_active").toUpperCase();
       return name !== "" && active !== "FALSE" && active !== "NO";
     })
     .map((row, idx) => {
-      const t1 = getCell(row, 6, "teacher_1", "teacher1", "teacher");
-      const t2 = getCell(row, 7, "teacher_2", "teacher2");
-      const combinedTeacher = [...new Set([t1, t2].filter(Boolean))].join(", ");
+      const t1 = getCell(row, 7, "teacher_1", "teacher1", "teacher");
+      const t2 = getCell(row, 8, "teacher_2", "teacher2");
+      const t3 = getCell(row, 9, "teacher_3", "teacher3");
+      const combinedTeacher = [...new Set([t1, t2, t3].filter(Boolean))].join(", ");
 
       return {
         id: idx + 1,
@@ -210,7 +309,7 @@ export function parseScheduleRows(scheduleRows) {
         group_name: String(getCell(row, 4, "group_name", "group", "name")),
         category: getCell(row, 5, "category") || "Hifz",
         teacher: combinedTeacher,
-        room: getCell(row, 8, "room", "place")
+        room: getCell(row, 6, "room", "place")
       };
     });
 }

@@ -1,6 +1,6 @@
 import { CATEGORY_STYLES, METADATA_GID, SCHEDULE_GID, SHEET_ID } from "./config.js";
 import { detectConflicts, timeToMinutes } from "./conflicts.js";
-import { fetchSheetJSONP, parseMetadataRows, parseScheduleRows } from "./data.js";
+import { fetchSheetRows, parseMetadataRows, parseScheduleRows } from "./data.js";
 import {
   escapeHtml,
   renderCard,
@@ -212,8 +212,8 @@ async function fetchSchedule() {
 
   try {
     const [scheduleRows, metadataRows] = await Promise.all([
-      fetchSheetJSONP(SHEET_ID, SCHEDULE_GID),
-      fetchSheetJSONP(SHEET_ID, METADATA_GID).catch(() => [])
+      fetchSheetRows(SHEET_ID, SCHEDULE_GID),
+      fetchSheetRows(SHEET_ID, METADATA_GID).catch(() => [])
     ]);
 
     state.metadata = parseMetadataRows(metadataRows);
