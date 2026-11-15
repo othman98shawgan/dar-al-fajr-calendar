@@ -60,15 +60,15 @@
 
       <!-- Main Track Toggle (Boys / Girls / All) -->
       <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200">
-        <button onclick="setTrack('Boys')" id="track-Boys"
+        <button type="button" id="track-Boys"
           class="track-btn px-5 py-1.5 rounded-lg text-sm font-bold transition-all">
           البنين
         </button>
-        <button onclick="setTrack('Girls')" id="track-Girls"
+        <button type="button" id="track-Girls"
           class="track-btn px-5 py-1.5 rounded-lg text-sm font-bold transition-all">
           البنات
         </button>
-        <button onclick="setTrack('All')" id="track-All"
+        <button type="button" id="track-All"
           class="track-btn px-5 py-1.5 rounded-lg text-sm font-bold transition-all">
           الكل (للمقارنة)
         </button>
@@ -76,24 +76,24 @@
 
       <!-- View Switcher & Conflict Alert -->
       <div class="flex items-center gap-2">
-        <button id="conflict-badge" onclick="setView('conflicts')"
+        <button type="button" id="conflict-badge"
           class="hidden items-center gap-1.5 bg-red-50 border border-red-300 text-red-700 px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-red-100 transition">
           <span>⚠️</span>
           <span id="conflict-count">0 تعارضات</span>
         </button>
 
         <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200">
-          <button onclick="setView('weekly')" id="view-weekly"
+          <button type="button" id="view-weekly"
             class="view-btn px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all">
             📅 الجدول الأسبوعي
           </button>
-          <button onclick="setView('rooms')" id="view-rooms"
+          <button type="button" id="view-rooms"
             class="view-btn px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all">
             🚪 إشغال القاعات
           </button>
         </div>
 
-        <button onclick="fetchSchedule()" title="تحديث البيانات"
+        <button type="button" id="refresh-btn" title="تحديث البيانات"
           class="p-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 text-sm font-bold transition">
           🔄
         </button>
@@ -107,32 +107,32 @@
 
         <!-- Search Input -->
         <div class="relative flex-1 min-w-[200px]">
-          <input type="text" id="filter-search" oninput="updateFilters()"
+          <input type="text" id="filter-search"
             placeholder="بحث باسم المجموعة، المعلم، أو القاعة..."
             class="w-full pl-3 pr-9 py-1.5 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" />
           <span class="absolute right-3 top-2 text-slate-400 text-sm">🔍</span>
         </div>
 
         <!-- Category Filter -->
-        <select id="filter-category" onchange="updateFilters()"
+        <select id="filter-category"
           class="bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500">
           <option value="All">كل التصنيفات</option>
         </select>
 
         <!-- Teacher Filter -->
-        <select id="filter-teacher" onchange="updateFilters()"
+        <select id="filter-teacher"
           class="bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500">
           <option value="All">كل المعلمين</option>
         </select>
 
         <!-- Room Filter -->
-        <select id="filter-room" onchange="updateFilters()"
+        <select id="filter-room"
           class="bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500">
           <option value="All">كل القاعات</option>
         </select>
 
         <!-- Day Selector (Shown only in Room Matrix View) -->
-        <select id="filter-matrix-day" onchange="render()"
+        <select id="filter-matrix-day"
           class="hidden bg-emerald-50 border border-emerald-300 text-emerald-900 rounded-lg px-3 py-1.5 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500">
           <option value="Sunday">يوم الأحد</option>
           <option value="Monday">يوم الإثنين</option>
@@ -144,7 +144,8 @@
         </select>
 
         <!-- Reset Button -->
-        <button onclick="resetFilters()" class="text-xs font-bold text-slate-500 hover:text-slate-800 px-2 py-1">
+        <button type="button" id="reset-filters-btn"
+          class="text-xs font-bold text-slate-500 hover:text-slate-800 px-2 py-1">
           إعادة ضبط ✕
         </button>
 
@@ -192,8 +193,8 @@
   </main>
 
   <!-- TIME-SLOT OVERFLOW MODAL ("VIEW MORE") -->
-  <div id="slot-modal" onclick="if(event.target === this) closeSlotModal()"
-    class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
+  <div id="slot-modal"
+    class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
     <div
       class="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-4xl w-full max-h-[85vh] flex flex-col overflow-hidden">
 
@@ -203,7 +204,7 @@
           <h3 id="modal-title" class="font-extrabold text-base">حلقات الفترة</h3>
           <p id="modal-subtitle" class="text-xs text-slate-300 font-medium mt-0.5"></p>
         </div>
-        <button onclick="closeSlotModal()"
+        <button type="button" id="modal-close-btn"
           class="w-8 h-8 rounded-lg bg-slate-700 hover:bg-slate-600 flex items-center justify-center text-white font-bold transition">
           ✕
         </button>
@@ -211,7 +212,7 @@
 
       <!-- Modal Quick Filter -->
       <div class="p-3 bg-slate-50 border-b border-slate-200 flex items-center gap-3">
-        <input type="text" id="modal-search" oninput="filterModalCards()"
+        <input type="text" id="modal-search"
           placeholder="ابحث داخل هذه الفترة (اسم المجموعة، المعلم، أو القاعة)..."
           class="w-full px-3 py-1.5 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" />
       </div>
@@ -224,705 +225,7 @@
     </div>
   </div>
 
-  <script>
-    /********************************************************************
-     * 1. GOOGLE SHEETS LIVE CONFIGURATION (CORS-FREE JSONP)
-     ********************************************************************/
-    // Replace with your Google Spreadsheet ID (from the browser URL bar: /d/<SHEET_ID>/edit)
-    const SHEET_ID = "1QHtA0q8rXp064QoK9TrZWGzoq8i9vrzfUQBerWXFvYk";
-
-    // GID of your Schedule tab and Metadata tab
-    const SCHEDULE_GID = "0";
-    const METADATA_GID = "573175636";
-
-    const MAX_VISIBLE_PER_SLOT = 2;
-
-    const DAYS_ORDER = [
-      { key: "Sunday", label: "الأحد" },
-      { key: "Monday", label: "الإثنين" },
-      { key: "Tuesday", label: "الثلاثاء" },
-      { key: "Wednesday", label: "الأربعاء" },
-      { key: "Thursday", label: "الخميس" },
-      { key: "Friday", label: "الجمعة" },
-      { key: "Saturday", label: "السبت" }
-    ];
-
-    const CATEGORY_STYLES = {
-      "Hifz": { label: "حفظ", card: "bg-emerald-50/90 border-emerald-500 text-emerald-950", badge: "bg-emerald-600 text-white" },
-      "Reading": { label: "قراءة", card: "bg-sky-50/90 border-sky-500 text-sky-950", badge: "bg-sky-600 text-white" },
-      "Qaidah Nouraniah": { label: "قاعدة نورانية", card: "bg-amber-50/90 border-amber-500 text-amber-950", badge: "bg-amber-500 text-white" },
-      "Tarbawi": { label: "تربوي", card: "bg-purple-50/90 border-purple-500 text-purple-950", badge: "bg-purple-600 text-white" }
-    };
-
-    /********************************************************************
-     * 2. APPLICATION STATE
-     ********************************************************************/
-    const state = {
-      rawSchedule: [],
-      metadata: { tracks: [], days: [], categories: [], rooms: [], teachers: [] },
-      conflicts: new Map(),
-      conflictPairs: [],
-      slotGroups: new Map(),
-      activeModalItems: [],
-      track: "Boys",
-      view: "weekly",
-      filters: {
-        search: "",
-        category: "All",
-        teacher: "All",
-        room: "All"
-      }
-    };
-
-    /********************************************************************
-     * 3. TIME, MASJID EXCEPTION & CONFLICT ENGINE
-     ********************************************************************/
-    function timeToMinutes(timeStr) {
-      if (!timeStr || !timeStr.includes(":")) return 0;
-      const [h, m] = timeStr.split(":").map(Number);
-      return (h || 0) * 60 + (m || 0);
-    }
-
-    function isMasjid(roomName) {
-      if (!roomName) return false;
-      const normalized = roomName.trim().toLowerCase();
-      return normalized === "المسجد" || normalized === "مسجد" || normalized.includes("masjid");
-    }
-
-    const DAY_MAP = {
-      "1": "Sunday",
-      "2": "Monday",
-      "3": "Tuesday",
-      "4": "Wednesday",
-      "5": "Thursday",
-      "6": "Friday",
-      "7": "Saturday"
-    };
-
-    function normalizeDay(dayVal) {
-      if (!dayVal) return "Sunday";
-      const clean = String(dayVal).trim();
-      // If it's a number 1-7, map it to the day name
-      if (DAY_MAP[clean]) return DAY_MAP[clean];
-
-      // If it's already an English day name (e.g., "Sunday", "sunday")
-      const capitalized = clean.charAt(0).toUpperCase() + clean.slice(1).toLowerCase();
-      const validNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-      if (validNames.includes(capitalized)) return capitalized;
-
-      return clean;
-    }
-
-    function detectConflicts(data) {
-      state.conflicts.clear();
-      state.conflictPairs = [];
-
-      for (let i = 0; i < data.length; i++) {
-        for (let j = i + 1; j < data.length; j++) {
-          const a = data[i];
-          const b = data[j];
-
-          if (a.day !== b.day) continue;
-
-          const startA = timeToMinutes(a.start_time);
-          const endA = timeToMinutes(a.end_time);
-          const startB = timeToMinutes(b.start_time);
-          const endB = timeToMinutes(b.end_time);
-
-          if (startA < endB && endA > startB) {
-            // Room Conflict (Masjid exempt)
-            if (a.room === b.room && !isMasjid(a.room) && a.room !== "") {
-              const msg = `تعارض في القاعة (${a.room}) مع "${b.group_name}"`;
-              const msgReverse = `تعارض في القاعة (${b.room}) مع "${a.group_name}"`;
-              addConflictFlag(a.id, msg);
-              addConflictFlag(b.id, msgReverse);
-              state.conflictPairs.push({ type: "قاعة مزدوجة", itemA: a, itemB: b, resource: a.room });
-            }
-
-            // Teacher Conflict (handles co-teachers in teacher_1 / teacher_2)
-            const teachersA = (a.teacher || "").split(",").map(t => t.trim()).filter(Boolean);
-            const teachersB = (b.teacher || "").split(",").map(t => t.trim()).filter(Boolean);
-            const sharedTeachers = teachersA.filter(t => teachersB.includes(t));
-
-            if (sharedTeachers.length > 0) {
-              sharedTeachers.forEach(tName => {
-                const msg = `تعارض للمعلم (${tName}) مع "${b.group_name}"`;
-                const msgReverse = `تعارض للمعلم (${tName}) مع "${a.group_name}"`;
-                addConflictFlag(a.id, msg);
-                addConflictFlag(b.id, msgReverse);
-                state.conflictPairs.push({ type: "معلم في مجموعتين بنفس الوقت", itemA: a, itemB: b, resource: tName });
-              });
-            }
-          }
-        }
-      }
-
-      const badge = document.getElementById("conflict-badge");
-      const countEl = document.getElementById("conflict-count");
-      if (state.conflictPairs.length > 0) {
-        badge.classList.remove("hidden");
-        badge.classList.add("flex");
-        countEl.textContent = `${state.conflictPairs.length} تعارضات في الجدول`;
-      } else {
-        badge.classList.add("hidden");
-      }
-    }
-
-    function addConflictFlag(id, msg) {
-      if (!state.conflicts.has(id)) state.conflicts.set(id, []);
-      state.conflicts.get(id).push(msg);
-    }
-
-    /********************************************************************
-     * 4. ZERO-CORS JSONP FETCHER (Works locally & on web)
-     ********************************************************************/
-    function fetchSheetJSONP(sheetId, gid) {
-      return new Promise((resolve, reject) => {
-        const callbackName = "gvizCallback_" + Math.floor(Math.random() * 10000000);
-        const script = document.createElement("script");
-
-        window[callbackName] = function (json) {
-          delete window[callbackName];
-          if (script.parentNode) document.body.removeChild(script);
-
-          if (!json || !json.table) {
-            return reject(new Error("Invalid response from Google Sheets"));
-          }
-
-          // Labels from Google (might be empty or lowercase)
-          const cols = json.table.cols.map(c => (c.label || "").trim().toLowerCase().replace(/\s+/g, "_"));
-
-          const rows = (json.table.rows || []).map(r => {
-            const rowObj = {};
-            if (r.c) {
-              r.c.forEach((cell, i) => {
-                // Get display formatted string (.f) or raw value (.v)
-                let val = "";
-                if (cell) {
-                  val = cell.f !== undefined && cell.f !== null ? cell.f : (cell.v !== undefined && cell.v !== null ? cell.v : "");
-                }
-                val = String(val).trim();
-
-                // 1. Store by column index: "_0", "_1", "_4" etc.
-                rowObj[`_${i}`] = val;
-
-                // 2. Store by label if present
-                const headerKey = cols[i];
-                if (headerKey) rowObj[headerKey] = val;
-              });
-            }
-            return rowObj;
-          });
-
-          resolve(rows);
-        };
-
-        // Adding &headers=1 forces Google Sheets to treat row 1 as the column header
-        script.src = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=responseHandler:${callbackName}&gid=${gid}&headers=1&t=${Date.now()}`;
-
-        script.onerror = () => {
-          delete window[callbackName];
-          if (script.parentNode) document.body.removeChild(script);
-          reject(new Error("Network error loading Google Sheet"));
-        };
-        document.body.appendChild(script);
-      });
-    }
-
-    // Smart reader: checks custom names, fallback index, and handles numbers cleanly
-    function getCell(row, fallbackIdx, ...names) {
-      for (const name of names) {
-        if (row[name] !== undefined && row[name] !== "") {
-          return String(row[name]).trim();
-        }
-      }
-      // Check column index fallback: "_0", "_4", etc.
-      if (fallbackIdx !== null && row[`_${fallbackIdx}`] !== undefined) {
-        return String(row[`_${fallbackIdx}`]).trim();
-      }
-      return "";
-    }
-
-    async function fetchSchedule() {
-      const statusEl = document.getElementById("sync-status");
-      statusEl.textContent = "جاري جلب البيانات من Google Sheets...";
-
-      try {
-        const [scheduleRows, metadataRows] = await Promise.all([
-          fetchSheetJSONP(SHEET_ID, SCHEDULE_GID),
-          fetchSheetJSONP(SHEET_ID, METADATA_GID).catch(() => [])
-        ]);
-
-        console.log("Loaded rows from Sheets:", scheduleRows);
-
-        // 1. Process Metadata
-        if (metadataRows && metadataRows.length > 0) {
-          state.metadata = {
-            tracks: [...new Set(metadataRows.map(r => getCell(r, 0, "tracks", "track")).filter(Boolean))],
-            days: [...new Set(metadataRows.map(r => normalizeDay(getCell(r, 1, "days", "day"))).filter(Boolean))],
-            categories: [...new Set(metadataRows.map(r => getCell(r, 2, "categories", "category")).filter(Boolean))],
-            rooms: [...new Set(metadataRows.map(r => getCell(r, 3, "rooms", "room")).filter(Boolean))],
-            teachers: [...new Set(metadataRows.map(r => getCell(r, 4, "teachers", "teacher")).filter(Boolean))]
-          };
-        }
-
-        // 2. Process Schedule Rows
-        state.rawSchedule = scheduleRows
-          .filter(row => {
-            // Group name is Column E (Index 4)
-            const name = getCell(row, 4, "group_name", "group", "name");
-            // Active is Column J (Index 9)
-            const active = getCell(row, 9, "active", "is_active").toUpperCase();
-
-            // Only skip if the name is genuinely empty or active is FALSE
-            return name !== "" && active !== "FALSE" && active !== "NO";
-          })
-          .map((row, idx) => {
-            // Teacher 1 is Column G (Index 6), Teacher 2 is Column H (Index 7)
-            const t1 = getCell(row, 6, "teacher_1", "teacher1", "teacher");
-            const t2 = getCell(row, 7, "teacher_2", "teacher2");
-            const combinedTeacher = [t1, t2].filter(Boolean).join(", ");
-
-            return {
-              id: idx + 1,
-              track: getCell(row, 0, "track") || "Boys",                          // Col A (0)
-              day: normalizeDay(getCell(row, 1, "day", "day_of_week", "اليوم")), // Col B (1)
-              start_time: normalizeTimeString(getCell(row, 2, "start_time", "start")), // Col C (2)
-              end_time: normalizeTimeString(getCell(row, 3, "end_time", "end")),       // Col D (3)
-              group_name: getCell(row, 4, "group_name", "group", "name"),        // Col E (4)
-              category: getCell(row, 5, "category") || "Hifz",                   // Col F (5)
-              teacher: combinedTeacher,
-              room: getCell(row, 8, "room", "place")                              // Col I (8)
-            };
-          });
-
-        const time = new Date().toLocaleTimeString("ar-EG", { hour: '2-digit', minute: '2-digit' });
-        statusEl.textContent = `متصل بقاعدة البيانات (${state.rawSchedule.length} حلقة) • آخر تحديث: ${time}`;
-
-      } catch (err) {
-        console.error("Fetch Error:", err);
-        statusEl.textContent = "⚠️ خطأ في قراءة البيانات من Google Sheets";
-      }
-
-      detectConflicts(state.rawSchedule);
-      populateFilterDropdowns();
-      render();
-    }
-
-    /********************************************************************
-     * 5. FILTER POPULATION & UI CONTROLS
-     ********************************************************************/
-    function populateFilterDropdowns() {
-      const rawTeachers = state.rawSchedule.map(d => d.teacher).filter(Boolean);
-      const splitTeachers = rawTeachers.flatMap(t => t.split(",").map(s => s.trim()));
-
-      const teachers = [...new Set([
-        ...(state.metadata.teachers || []),
-        ...splitTeachers
-      ])].filter(Boolean);
-
-      const categories = [...new Set([
-        ...(state.metadata.categories || []),
-        ...state.rawSchedule.map(d => d.category)
-      ])].filter(Boolean);
-
-      const rooms = [...new Set([
-        ...(state.metadata.rooms || []),
-        ...state.rawSchedule.map(d => d.room)
-      ])].filter(Boolean);
-
-      fillSelect("filter-category", categories, "كل التصنيفات", val => CATEGORY_STYLES[val]?.label ? `${CATEGORY_STYLES[val].label} (${val})` : val);
-      fillSelect("filter-teacher", teachers, "كل المعلمين");
-      fillSelect("filter-room", rooms, "كل القاعات");
-    }
-
-    function fillSelect(elementId, values, defaultLabel, formatter = v => v) {
-      const select = document.getElementById(elementId);
-      const currentVal = select.value;
-      select.innerHTML = `<option value="All">${defaultLabel}</option>` +
-        values.map(v => `<option value="${v}">${formatter(v)}</option>`).join("");
-      if (values.includes(currentVal)) select.value = currentVal;
-      else select.value = "All";
-    }
-
-    function getFilteredData() {
-      return state.rawSchedule.filter(item => {
-        if (state.track !== "All" && item.track !== state.track) return false;
-        if (state.filters.category !== "All" && item.category !== state.filters.category) return false;
-
-        // Multi-teacher filter check
-        if (state.filters.teacher !== "All") {
-          const itemTeachers = (item.teacher || "").split(",").map(t => t.trim());
-          if (!itemTeachers.includes(state.filters.teacher)) return false;
-        }
-
-        if (state.filters.room !== "All" && item.room !== state.filters.room) return false;
-
-        if (state.filters.search) {
-          const q = state.filters.search.toLowerCase();
-          const matchName = String(item.group_name || "").toLowerCase().includes(q);
-          const matchTeacher = String(item.teacher || "").toLowerCase().includes(q);
-          const matchRoom = String(item.room || "").toLowerCase().includes(q);
-          if (!matchName && !matchTeacher && !matchRoom) return false;
-        }
-        return true;
-      }).sort((a, b) => timeToMinutes(a.start_time) - timeToMinutes(b.start_time));
-    }
-
-    function setTrack(track) {
-      state.track = track;
-      populateFilterDropdowns();
-      updateFilters();
-    }
-
-    function setView(view) {
-      state.view = view;
-      const daySelect = document.getElementById("filter-matrix-day");
-      if (view === "rooms") daySelect.classList.remove("hidden");
-      else daySelect.classList.add("hidden");
-      render();
-    }
-
-    function updateFilters() {
-      state.filters.search = document.getElementById("filter-search").value.trim();
-      state.filters.category = document.getElementById("filter-category").value;
-      state.filters.teacher = document.getElementById("filter-teacher").value;
-      state.filters.room = document.getElementById("filter-room").value;
-      render();
-    }
-
-    function resetFilters() {
-      document.getElementById("filter-search").value = "";
-      document.getElementById("filter-category").value = "All";
-      document.getElementById("filter-teacher").value = "All";
-      document.getElementById("filter-room").value = "All";
-      updateFilters();
-    }
-
-    /********************************************************************
-     * 6. RENDERING VIEWS & CLUSTER LOGIC
-     ********************************************************************/
-    function render() {
-      ["Boys", "Girls", "All"].forEach(t => {
-        const btn = document.getElementById(`track-${t}`);
-        if (state.track === t) {
-          btn.className = "track-btn px-5 py-1.5 rounded-lg text-sm font-extrabold bg-emerald-600 text-white shadow-sm transition-all";
-        } else {
-          btn.className = "track-btn px-5 py-1.5 rounded-lg text-sm font-bold text-slate-600 hover:text-slate-900 transition-all";
-        }
-      });
-
-      ["weekly", "rooms"].forEach(v => {
-        const btn = document.getElementById(`view-${v}`);
-        if (state.view === v) {
-          btn.className = "view-btn px-3.5 py-1.5 rounded-lg text-xs font-extrabold bg-white text-slate-900 shadow-sm transition-all";
-        } else {
-          btn.className = "view-btn px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 transition-all";
-        }
-      });
-
-      const filtered = getFilteredData();
-      document.getElementById("stats-counter").textContent = `${filtered.length} حلقات معروضة`;
-
-      const canvas = document.getElementById("app-Canvas");
-      if (state.view === "weekly") {
-        canvas.innerHTML = renderWeeklyGrid(filtered);
-      } else if (state.view === "rooms") {
-        canvas.innerHTML = renderRoomsMatrix(filtered);
-      } else if (state.view === "conflicts") {
-        canvas.innerHTML = renderConflictsInspector();
-      }
-    }
-
-    // VIEW 1: WEEKLY MASTER GRID
-    function renderWeeklyGrid(data) {
-      state.slotGroups.clear();
-
-      return `
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-3">
-          ${DAYS_ORDER.map(dayObj => {
-        const dayClasses = data.filter(d => d.day === dayObj.key);
-
-        const timeClusters = [];
-        const clusterMap = new Map();
-
-        dayClasses.forEach(item => {
-          const timeKey = `${item.start_time}-${item.end_time}`;
-          if (!clusterMap.has(timeKey)) {
-            const group = { timeKey, start: item.start_time, end: item.end_time, items: [] };
-            clusterMap.set(timeKey, group);
-            timeClusters.push(group);
-          }
-          clusterMap.get(timeKey).items.push(item);
-        });
-
-        return `
-              <div class="bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col overflow-hidden min-h-[320px]">
-                <div class="bg-slate-800 text-white px-3.5 py-2.5 flex items-center justify-between">
-                  <span class="font-extrabold text-sm">${dayObj.label}</span>
-                  <span class="text-xs ${dayClasses.length ? 'bg-emerald-600 text-white' : 'bg-slate-700 text-slate-400'} px-2 py-0.5 rounded-full font-bold">
-                    ${dayClasses.length}
-                  </span>
-                </div>
-                
-                <div class="p-2.5 space-y-2.5 flex-1 bg-slate-50/40 flex flex-col">
-                  ${timeClusters.length === 0
-            ? `<div class="m-auto text-center py-10 text-xs text-slate-400 font-medium">
-                         لا توجد حلقات مجدولة
-                       </div>`
-            : timeClusters.map(cluster => renderTimeCluster(dayObj, cluster)).join("")
-          }
-                </div>
-              </div>
-            `;
-      }).join("")}
-        </div>
-      `;
-    }
-
-    function renderTimeCluster(dayObj, cluster) {
-      const items = cluster.items;
-      if (items.length <= MAX_VISIBLE_PER_SLOT) {
-        return items.map(item => renderCard(item)).join("");
-      }
-
-      const slotId = `${dayObj.key}_${cluster.timeKey}`;
-      state.slotGroups.set(slotId, {
-        dayLabel: dayObj.label,
-        start: cluster.start,
-        end: cluster.end,
-        items: items
-      });
-
-      const visibleItems = items.slice(0, MAX_VISIBLE_PER_SLOT);
-      const hiddenCount = items.length - MAX_VISIBLE_PER_SLOT;
-
-      return `
-        <div class="p-2 rounded-xl bg-slate-200/60 border border-slate-300/80 space-y-2">
-          <div class="flex items-center justify-between px-1 text-[11px] font-extrabold text-slate-700">
-            <span dir="ltr">⏰ ${cluster.start} - ${cluster.end}</span>
-            <span class="bg-slate-800 text-white px-2 py-0.5 rounded-full">${items.length} حلقات متزامنة</span>
-          </div>
-          ${visibleItems.map(item => renderCard(item)).join("")}
-          <button 
-            onclick="openSlotModal('${slotId}')" 
-            class="w-full py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-xs transition flex items-center justify-center gap-1.5"
-          >
-            <span>عرض ${hiddenCount} حلقات أخرى في نفس الوقت</span>
-            <span>(${items.length} إجمالاً) ←</span>
-          </button>
-        </div>
-      `;
-    }
-
-    function renderCard(item) {
-      const style = CATEGORY_STYLES[item.category] || {
-        label: item.category,
-        card: "bg-slate-50 border-slate-400 text-slate-900",
-        badge: "bg-slate-600 text-white"
-      };
-
-      const itemConflicts = state.conflicts.get(item.id) || [];
-      const hasConflict = itemConflicts.length > 0;
-      const roomIsMasjid = isMasjid(item.room);
-
-      const trackBadge = state.track === "All"
-        ? `<span class="text-[10px] font-extrabold px-1.5 py-0.5 rounded ${item.track === 'Boys' ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800'}">
-             ${item.track === 'Boys' ? 'بنين' : 'بنات'}
-           </span>`
-        : '';
-
-      return `
-        <div class="rounded-xl border-r-4 p-2.5 shadow-xs transition hover:shadow-md ${style.card} ${hasConflict ? 'ring-2 ring-red-500 bg-red-50/60' : 'border border-slate-200/80'}">
-          
-          <div class="flex items-center justify-between gap-1 mb-1.5">
-            <span class="text-[11px] font-extrabold bg-white/90 px-2 py-0.5 rounded border border-slate-200 text-slate-800" dir="ltr">
-              ${item.start_time} - ${item.end_time}
-            </span>
-            <div class="flex items-center gap-1">
-              ${trackBadge}
-              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${style.badge}">
-                ${style.label}
-              </span>
-            </div>
-          </div>
-
-          <h3 class="font-extrabold text-sm text-slate-900 mb-2 leading-snug">
-            ${item.group_name}
-          </h3>
-
-          <div class="flex items-center justify-between text-xs font-bold text-slate-700 pt-1.5 border-t border-black/5 gap-1">
-            <span class="flex items-center gap-1 truncate" title="${item.teacher}">
-              <span>👤</span> ${item.teacher.replace(/,/g, ' • ')}
-            </span>
-            <span class="flex items-center gap-1 ${roomIsMasjid ? 'bg-emerald-700 text-white' : 'bg-white/80 text-slate-800'} px-2 py-0.5 rounded border border-black/10 shrink-0">
-              <span>${roomIsMasjid ? '🕌' : '📍'}</span> ${item.room}
-            </span>
-          </div>
-
-          ${hasConflict ? `
-            <div class="mt-2 pt-1.5 border-t border-red-200 text-[11px] font-bold text-red-700 space-y-0.5">
-              ${itemConflicts.map(c => `<div>⚠️ ${c}</div>`).join("")}
-            </div>
-          ` : ''}
-        </div>
-      `;
-    }
-
-    /********************************************************************
-     * 7. MODAL FUNCTIONS ("VIEW MORE" FOR BUSY TIME PERIODS)
-     ********************************************************************/
-    function openSlotModal(slotId) {
-      const slotData = state.slotGroups.get(slotId);
-      if (!slotData) return;
-
-      state.activeModalItems = slotData.items;
-
-      document.getElementById("modal-title").textContent = `حلقات يوم ${slotData.dayLabel} — الفترة (${slotData.start} - ${slotData.end})`;
-      document.getElementById("modal-subtitle").textContent = `إجمالي ${slotData.items.length} حلقات منعقدة في نفس الفترة الزمنية`;
-      document.getElementById("modal-search").value = "";
-
-      renderModalCards(state.activeModalItems);
-
-      const modal = document.getElementById("slot-modal");
-      modal.classList.remove("hidden");
-      modal.classList.add("flex");
-    }
-
-    function filterModalCards() {
-      const q = document.getElementById("modal-search").value.trim().toLowerCase();
-      if (!q) {
-        renderModalCards(state.activeModalItems);
-        return;
-      }
-      const filtered = state.activeModalItems.filter(item =>
-        String(item.group_name || "").toLowerCase().includes(q) ||
-        String(item.teacher || "").toLowerCase().includes(q) ||
-        String(item.room || "").toLowerCase().includes(q)
-      );
-      renderModalCards(filtered);
-    }
-
-    function renderModalCards(items) {
-      const container = document.getElementById("modal-body");
-      if (items.length === 0) {
-        container.innerHTML = `<div class="col-span-full py-10 text-center text-slate-400 font-bold text-sm">لا توجد نتائج مطابقة للبحث</div>`;
-        return;
-      }
-      container.innerHTML = items.map(item => renderCard(item)).join("");
-    }
-
-    function closeSlotModal() {
-      const modal = document.getElementById("slot-modal");
-      modal.classList.add("hidden");
-      modal.classList.remove("flex");
-    }
-
-    window.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") closeSlotModal();
-    });
-
-    /********************************************************************
-     * 8. ROOM MATRIX & CONFLICT INSPECTOR
-     ********************************************************************/
-    function renderRoomsMatrix(data) {
-      const selectedDay = document.getElementById("filter-matrix-day").value;
-      const dayLabel = DAYS_ORDER.find(d => d.key === selectedDay)?.label || selectedDay;
-      const rooms = [...new Set([
-        ...(state.metadata.rooms || []),
-        ...state.rawSchedule.map(d => d.room)
-      ])].filter(Boolean);
-
-      const dayData = data.filter(d => d.day === selectedDay);
-
-      return `
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-          <div class="bg-slate-800 text-white px-5 py-3 flex items-center justify-between">
-            <div>
-              <h2 class="font-extrabold text-base">مصفوفة إشغال القاعات — يوم ${dayLabel}</h2>
-              <p class="text-xs text-slate-300">لمعرفة القاعات الفارغة والمشغولة خلال اليوم</p>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-slate-50">
-            ${rooms.map(room => {
-        const roomClasses = dayData.filter(d => d.room === room);
-        const roomIsMasjid = isMasjid(room);
-        return `
-                <div class="bg-white rounded-xl border border-slate-200 overflow-hidden flex flex-col">
-                  <div class="bg-slate-100 border-b border-slate-200 px-4 py-2.5 flex items-center justify-between">
-                    <span class="font-extrabold text-slate-800 text-sm">${roomIsMasjid ? '🕌' : '📍'} ${room}</span>
-                    <span class="text-xs font-bold px-2 py-0.5 rounded-full ${roomClasses.length ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-600'}">
-                      ${roomClasses.length ? `${roomClasses.length} حلقات` : 'قاعة متاحة بالكامل'}
-                    </span>
-                  </div>
-                  <div class="p-3 space-y-2.5 flex-1 max-h-[500px] overflow-y-auto">
-                    ${roomClasses.length === 0
-            ? `<div class="py-10 text-center text-xs text-emerald-600 font-bold bg-emerald-50/40 rounded-lg border border-dashed border-emerald-200">
-                           ✓ القاعة فارغة طوال اليوم
-                         </div>`
-            : roomClasses.map(item => renderCard(item)).join("")
-          }
-                  </div>
-                </div>
-              `;
-      }).join("")}
-          </div>
-        </div>
-      `;
-    }
-
-    function renderConflictsInspector() {
-      return `
-        <div class="bg-white rounded-2xl border border-red-200 shadow-sm overflow-hidden">
-          <div class="bg-red-600 text-white px-5 py-3 flex items-center justify-between">
-            <div>
-              <h2 class="font-extrabold text-base">⚠️ مركز فحص التعارضات (${state.conflictPairs.length})</h2>
-              <p class="text-xs text-red-100">يفحص هذا القسم التداخلات الزمنية في القاعات (باستثناء المسجد) أو المعلمين</p>
-            </div>
-            <button onclick="setView('weekly')" class="bg-white text-red-700 px-3 py-1 rounded-lg text-xs font-extrabold">
-              العودة للجدول
-            </button>
-          </div>
-
-          <div class="p-4 space-y-3">
-            ${state.conflictPairs.length === 0
-          ? `<div class="p-8 text-center text-emerald-700 font-bold">لا توجد أي تعارضات في الجدول حالياً!</div>`
-          : state.conflictPairs.map(pair => {
-            const dayLabel = DAYS_ORDER.find(d => d.key === pair.itemA.day)?.label || pair.itemA.day;
-            return `
-                    <div class="p-4 rounded-xl bg-red-50 border border-red-200 flex flex-col md:flex-row items-center justify-between gap-4">
-                      <div class="space-y-1">
-                        <span class="inline-block bg-red-600 text-white text-xs font-extrabold px-2.5 py-0.5 rounded-full">
-                          ${pair.type}: ${pair.resource} — يوم ${dayLabel}
-                        </span>
-                        <p class="text-xs text-slate-600 font-medium pt-1">
-                          يوجد تداخل في الوقت بين هاتين المجموعتين في Google Sheets:
-                        </p>
-                      </div>
-                      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full md:w-2/3">
-                        ${renderCard(pair.itemA)}
-                        ${renderCard(pair.itemB)}
-                      </div>
-                    </div>
-                  `;
-          }).join("")
-        }
-          </div>
-        </div>
-      `;
-    }
-
-    // Initialize App
-    const [scheduleRows, metadataRows] = await Promise.all([
-      fetchSheetJSONP(SHEET_ID, SCHEDULE_GID),
-      fetchSheetJSONP(SHEET_ID, METADATA_GID).catch(() => [])
-    ]);
-
-    console.log("Raw row 0 from Google:", scheduleRows[0]);
-
-    fetchSchedule();
-  </script>
+  <script type="module" src="./js/app.js"></script>
 </body>
 
 </html>
