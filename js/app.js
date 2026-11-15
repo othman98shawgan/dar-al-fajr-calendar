@@ -100,16 +100,16 @@ function render() {
     const btn = document.getElementById(`track-${t}`);
     btn.className =
       state.track === t
-        ? "track-btn px-5 py-1.5 rounded-lg text-sm font-extrabold bg-emerald-600 text-white shadow-sm transition-all"
-        : "track-btn px-5 py-1.5 rounded-lg text-sm font-bold text-slate-600 hover:text-slate-900 transition-all";
+        ? "track-btn px-3 sm:px-5 py-2 sm:py-1.5 rounded-lg text-xs sm:text-sm font-extrabold bg-emerald-600 text-white shadow-sm transition-all text-center"
+        : "track-btn px-3 sm:px-5 py-2 sm:py-1.5 rounded-lg text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 transition-all text-center";
   });
 
   ["weekly", "rooms"].forEach((v) => {
     const btn = document.getElementById(`view-${v}`);
     btn.className =
       state.view === v
-        ? "view-btn px-3.5 py-1.5 rounded-lg text-xs font-extrabold bg-white text-slate-900 shadow-sm transition-all"
-        : "view-btn px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 transition-all";
+        ? "view-btn flex-1 sm:flex-initial px-3 sm:px-3.5 py-2 sm:py-1.5 rounded-lg text-xs font-extrabold bg-white text-slate-900 shadow-sm transition-all text-center"
+        : "view-btn flex-1 sm:flex-initial px-3 sm:px-3.5 py-2 sm:py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 transition-all text-center";
   });
 
   const filtered = getFilteredData();
@@ -252,6 +252,16 @@ function bindEvents() {
   document.getElementById("filter-matrix-day").addEventListener("change", render);
   document.getElementById("reset-filters-btn").addEventListener("click", resetFilters);
 
+  const mobileFiltersToggle = document.getElementById("mobile-filters-toggle");
+  const filtersPanel = document.getElementById("filters-panel");
+  if (mobileFiltersToggle && filtersPanel) {
+    mobileFiltersToggle.addEventListener("click", () => {
+      const isHidden = filtersPanel.classList.toggle("hidden");
+      mobileFiltersToggle.setAttribute("aria-expanded", String(!isHidden));
+      mobileFiltersToggle.textContent = isHidden ? "الفلاتر ▾" : "الفلاتر ▴";
+    });
+  }
+
   document.getElementById("modal-close-btn").addEventListener("click", closeSlotModal);
   document.getElementById("modal-search").addEventListener("input", filterModalCards);
   document.getElementById("slot-modal").addEventListener("click", (event) => {
@@ -259,6 +269,13 @@ function bindEvents() {
   });
 
   document.getElementById("app-Canvas").addEventListener("click", (event) => {
+    const jumpBtn = event.target.closest("[data-jump-day]");
+    if (jumpBtn) {
+      const target = document.getElementById(`day-${jumpBtn.dataset.jumpDay}`);
+      if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+
     const slotBtn = event.target.closest("[data-slot-id]");
     if (slotBtn) {
       openSlotModal(slotBtn.dataset.slotId);
